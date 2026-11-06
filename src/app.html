@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0B0B0D">
+<title>Compass</title>
+<link rel="apple-touch-icon" href="icon.png">
+<style>
+:root{--bg:#0B0B0D;--card:#17171A;--raised:#222226;--line:#2C2C31;--text:#F0EEE6;--mute:#9A978F;--faint:#66635C;--acc:#7C5CFF;--acc2:#B39DFF;--green:#30D158;--red:#FF453A}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--text);font:17px/1.45 -apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overscroll-behavior:none}
+body{padding-top:env(safe-area-inset-top)}
+#app{min-height:100vh;padding:16px 16px calc(84px + env(safe-area-inset-bottom))}
+#app.full{padding-bottom:24px}
+h1{font-size:30px;font-weight:700;letter-spacing:-.02em;margin:8px 0 6px}
+h2{font-size:21px;font-weight:600;letter-spacing:-.01em;margin:22px 0 10px}
+h3{font-size:17px;font-weight:600;margin:0 0 6px}
+p{margin:0 0 10px}
+.mute{color:var(--mute)}.faint{color:var(--faint)}.small{font-size:14px}.micro{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);font-weight:600}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin:0 0 12px}
+.btn{display:block;width:100%;border:0;border-radius:14px;padding:15px 18px;font:inherit;font-weight:600;color:#fff;background:var(--acc);text-align:center;cursor:pointer}
+.btn.sec{background:var(--raised);color:var(--text)}
+.btn.ghost{background:transparent;color:var(--acc2);padding:10px}
+.btn:disabled{opacity:.45}
+.btn+.btn{margin-top:10px}
+.row{display:flex;gap:10px;align-items:center}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
+.chip{font-size:13px;font-weight:600;padding:6px 11px;border-radius:999px;background:var(--raised);border:1px solid var(--line)}
+.chip b{color:var(--acc2);font-weight:700;margin-right:5px}
+.hero{background:linear-gradient(180deg,#2B1D5C 0%,#17171A 70%);border:1px solid #3A2E6E;border-radius:22px;padding:22px 18px 18px;margin-bottom:14px}
+.av{width:62px;height:62px;border-radius:50%;background:var(--acc);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;margin-bottom:14px}
+.hero h1{margin:0 0 6px}
+.bar{height:6px;border-radius:3px;background:var(--raised);overflow:hidden;margin:6px 0 10px}
+.bar i{display:block;height:100%;background:var(--acc)}
+.trait{margin:10px 0}
+.trait .row{justify-content:space-between;font-size:15px}
+.tabs{position:fixed;left:0;right:0;bottom:0;display:flex;background:rgba(11,11,13,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--line);padding:8px 8px calc(8px + env(safe-area-inset-bottom))}
+.tabs button{flex:1;background:none;border:0;color:var(--faint);font:inherit;font-size:11px;font-weight:600;padding:6px 0 2px;border-radius:12px}
+.tabs button.on{color:var(--text);background:var(--raised)}
+.tabs svg{display:block;margin:0 auto 3px;width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.q{min-height:calc(100vh - 60px);display:flex;flex-direction:column}
+.q .top{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.q .top .bar{flex:1;margin:0}
+.q .ask{font-size:24px;font-weight:600;letter-spacing:-.01em;margin:10px 0 24px;flex:1}
+.q .lead{font-size:15px;color:var(--mute);margin-bottom:10px}
+.opt{display:block;width:100%;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:14px;padding:15px 16px;font:inherit;text-align:left;margin-bottom:8px;cursor:pointer}
+.opt.on{border-color:var(--acc);background:#1E1838}
+.opt.sm{padding:12px 14px;font-size:15px}
+.bip{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.bip div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;font-size:15px}
+.bip div:last-child{text-align:right}
+.scale{display:flex;gap:8px;margin-bottom:8px}
+.scale button{flex:1;height:52px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--text);font:inherit;font-weight:600}
+.scale button.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.scale button:nth-child(1),.scale button:nth-child(5){height:60px;margin-top:-4px}
+.ends{display:flex;justify-content:space-between;font-size:12px;color:var(--faint);margin-bottom:18px}
+.x{background:none;border:0;color:var(--mute);font:inherit;padding:6px 0}
+.job{padding:14px 0;border-bottom:1px solid var(--line)}
+.job:last-child{border:0}
+.job .row{justify-content:space-between;align-items:flex-start}
+.pct{font-weight:700;color:var(--acc2);white-space:nowrap;margin-left:12px}
+.zone{font-size:12px;color:var(--faint)}
+.seg{display:flex;gap:6px;margin:0 0 14px;overflow-x:auto;padding-bottom:4px}
+.seg button{white-space:nowrap;font:inherit;font-size:13px;font-weight:600;padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--mute)}
+.seg button.on{background:var(--raised);color:var(--text);border-color:var(--acc)}
+.msgs{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+.m{max-width:88%;padding:12px 14px;border-radius:16px;white-space:pre-wrap;font-size:16px}
+.m.u{align-self:flex-end;background:var(--acc);color:#fff;border-bottom-right-radius:4px}
+.m.a{align-self:flex-start;background:var(--card);border:1px solid var(--line);border-bottom-left-radius:4px}
+.m.a.err{border-color:var(--red);color:var(--red)}
+.compose{position:fixed;left:0;right:0;bottom:calc(64px + env(safe-area-inset-bottom));padding:8px 12px;background:var(--bg);border-top:1px solid var(--line);display:flex;gap:8px}
+.compose textarea{flex:1;font:inherit;font-size:16px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--text);padding:11px 13px;resize:none;height:46px;max-height:120px}
+.compose button{width:46px;height:46px;border-radius:50%;border:0;background:var(--acc);color:#fff;font-size:20px}
+input[type=text],input[type=password],select{width:100%;font:inherit;font-size:16px;border-radius:12px;border:1px solid var(--line);background:var(--raised);color:var(--text);padding:12px 13px;margin:6px 0 12px}
+label{display:block;font-size:13px;color:var(--mute);font-weight:600}
+.toast{position:fixed;top:calc(12px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);background:var(--raised);border:1px solid var(--line);padding:10px 16px;border-radius:999px;font-size:14px;z-index:9;max-width:90vw}
+.toast.err{border-color:var(--red)}
+.sec{margin:18px 0}
+.sec .micro{margin-bottom:4px}
+.spin{display:inline-block;width:16px;height:16px;border:2px solid var(--line);border-top-color:var(--acc2);border-radius:50%;animation:sp .8s linear infinite;vertical-align:-3px;margin-right:8px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.tags button{font:inherit;font-size:13px;padding:7px 11px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--acc2)}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+'use strict';
+/*DATA*/
+
+/* ---------- questionnaires ---------- */
+const AREAS=['Realistic','Investigative','Artistic','Social','Enterprising','Conventional'];
+const BF_FACTORS=['Extraversion','Agreeableness','Conscientiousness','Emotional stability','Openness'];
+/* IPIP Big-Five Factor Markers, 50 items, public domain (ipip.ori.org). f = factor index, k = +1 or -1 keyed */
+const BF_ITEMS=[
+['Am the life of the party',0,1],['Feel comfortable around people',0,1],['Start conversations',0,1],['Talk to a lot of different people at parties',0,1],["Don't mind being the center of attention",0,1],
+["Don't talk a lot",0,-1],['Keep in the background',0,-1],['Have little to say',0,-1],["Don't like to draw attention to myself",0,-1],['Am quiet around strangers',0,-1],
+['Am interested in people',1,1],["Sympathize with others' feelings",1,1],['Have a soft heart',1,1],['Take time out for others',1,1],["Feel others' emotions",1,1],['Make people feel at ease',1,1],
+['Am not really interested in others',1,-1],['Insult people',1,-1],["Am not interested in other people's problems",1,-1],['Feel little concern for others',1,-1],
+['Am always prepared',2,1],['Pay attention to details',2,1],['Get chores done right away',2,1],['Like order',2,1],['Follow a schedule',2,1],['Am exacting in my work',2,1],
+['Leave my belongings around',2,-1],['Make a mess of things',2,-1],['Often forget to put things back in their proper place',2,-1],['Shirk my duties',2,-1],
+['Am relaxed most of the time',3,1],['Seldom feel blue',3,1],
+['Get stressed out easily',3,-1],['Worry about things',3,-1],['Am easily disturbed',3,-1],['Get upset easily',3,-1],['Change my mood a lot',3,-1],['Have frequent mood swings',3,-1],['Get irritated easily',3,-1],['Often feel blue',3,-1],
+['Have a rich vocabulary',4,1],['Have a vivid imagination',4,1],['Have excellent ideas',4,1],['Am quick to understand things',4,1],['Use difficult words',4,1],['Spend time reflecting on things',4,1],['Am full of ideas',4,1],
+['Have difficulty understanding abstract ideas',4,-1],['Am not interested in abstract ideas',4,-1],['Do not have a good imagination',4,-1]
+].map(r=>({q:r[0],f:r[1],k:r[2]}));
+/* bipolar pairs, left = first letter, right = second; 5 per dimension */
+const MB_ITEMS=[
+['After a long week I recharge by','being around people','being on my own','EI'],
+['In a group conversation I','think out loud','think before I speak','EI'],
+['Meeting new people is','energising','draining','EI'],
+["I'd rather have",'a wide circle of friends','a few close ones','EI'],
+['I do my best thinking','talking it through','working alone','EI'],
+['I trust','what I can see and verify','hunches and patterns','SN'],
+['I prefer instructions that are','step by step','big picture, I fill in the rest','SN'],
+["I'm more interested in",'what is','what could be','SN'],
+['People would call me','practical','imaginative','SN'],
+['When learning something new I want','concrete examples first','the theory first','SN'],
+['When a friend has a problem I first','suggest fixes','listen','TF'],
+['A fair decision','applies the same rule to everyone',"accounts for each person's situation",'TF'],
+["I'd rather be seen as",'competent','kind','TF'],
+['Harsh but true feedback','is better than softened feedback','should be softened','TF'],
+["In an argument I'm swayed by",'logic','how people feel','TF'],
+['My week is','planned ahead','figured out as it comes','JP'],
+['With deadlines I','finish early','finish at the last minute','JP'],
+['I prefer','deciding and moving on','keeping options open','JP'],
+['My workspace is','organised','cluttered, but I know where things are','JP'],
+['Surprises in my plans are','annoying','fun','JP']
+].map(r=>({q:r[0],a:r[1],b:r[2],d:r[3]}));
+const DI_STYLES=['Dominance','Influence','Steadiness','Conscientiousness'];
+const DI_ITEMS=[
+['I take charge when no one else does',0],["I'd rather win than be liked",0],['I make decisions fast',0],["I'm comfortable with conflict",0],['I push for results even when others want to slow down',0],
+['I enjoy being the centre of attention',1],['I persuade people easily',1],['I talk to strangers easily',1],["I'm optimistic about most things",1],["I'd rather brainstorm than follow a procedure",1],
+["I'm patient with people",2],['I prefer a steady routine over constant change',2],["I'm loyal to people and teams",2],['I avoid confrontation',2],['People come to me to calm things down',2],
+['I check my work twice',3],['I want the facts before I decide',3],['I follow rules and procedures',3],["I'm uncomfortable with rough estimates",3],['I notice mistakes others miss',3]
+].map(r=>({q:r[0],s:r[1]}));
+const EN_NAMES=['','The Reformer','The Helper','The Achiever','The Individualist','The Investigator','The Loyalist','The Enthusiast','The Challenger','The Peacemaker'];
+const EN_ITEMS=[
+["I notice what's wrong and want to fix it",1],["I'm hard on myself when I slip",1],['There is a right way to do things',1],
+['I know what people need before they ask',2],["I feel good when I'm needed",2],['I find it hard to ask for help',2],
+['I measure myself by what I achieve',3],['I adapt how I come across to suit the audience',3],['Being seen as unsuccessful would be hard for me',3],
+['I feel different from most people',4],['My moods run deep',4],["I'm drawn to what's missing in my life",4],
+['I need time alone to recharge my thinking',5],["I'd rather understand something fully than act on it",5],['I keep my needs small',5],
+['I plan for what could go wrong',6],['I look for people and systems I can trust',6],["I doubt myself even after I've decided",6],
+['I hate being bored',7],['I keep my options open',7],["I'd rather look forward than dwell on pain",7],
+['I protect the people who are mine',8],["I'm direct, sometimes too direct",8],["I don't like being controlled",8],
+['I go along to keep the peace',9],['I can see every side of an argument',9],['I put off things that feel like conflict',9]
+].map(r=>({q:r[0],t:r[1]}));
+const MB_NAMES={INTJ:'The Strategist',INTP:'The Theorist',ENTJ:'The Director',ENTP:'The Inventor',INFJ:'The Counsellor',INFP:'The Idealist',ENFJ:'The Mentor',ENFP:'The Catalyst',ISTJ:'The Steward',ISFJ:'The Protector',ESTJ:'The Organiser',ESFJ:'The Host',ISTP:'The Craftsman',ISFP:'The Composer',ESTP:'The Operator',ESFP:'The Entertainer'};
+const SECTIONS=[
+{k:'ip',title:'Interests',lead:'60 work activities. Say how much you would like to do each one. Ignore pay and training needed.',n:60,scale:['Strongly dislike','Dislike','Unsure','Like','Strongly like']},
+{k:'bf',title:'Personality',lead:'50 statements. How accurately does each describe you?',n:50,scale:['Very inaccurate','Inaccurate','Neutral','Accurate','Very accurate']},
+{k:'mb',title:'Type',lead:'20 pairs. Pick the side that is more you, and how strongly.',n:20},
+{k:'di',title:'Work style',lead:'20 statements about how you operate with people.',n:20,scale:['Strongly disagree','Disagree','Neutral','Agree','Strongly agree']},
+{k:'en',title:'Motivation',lead:'27 statements about what drives you.',n:27,scale:['Strongly disagree','Disagree','Neutral','Agree','Strongly agree']}
+];
+const TOTAL_Q=SECTIONS.reduce((a,s)=>a+s.n,0);
+
+/* ---------- state ---------- */
+const K='compass-v1',KC='compass-chat-v1',KK='compass-key-v1';
+function lget(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}}
+function lset(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){toast('Could not save on this phone',1)}}
+const S=Object.assign({name:'',answers:{ip:[],bf:[],mb:[],di:[],en:[]},ai:null,aiModel:null},lget(K,{}));
+S.chat=lget(KC,[]);S.key=lget(KK,'');
+S.view=S.view||'home';S.sec=S.sec||0;S.qi=S.qi||0;S.zone=0;S.busy=false;S.jobOpen=null;
+function save(){const {view,sec,qi,name,answers,ai,aiModel}=S;lset(K,{view,sec,qi,name,answers,ai,aiModel})}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+let tt;function toast(m,err){let t=document.querySelector('.toast');if(!t){t=document.createElement('div');document.body.appendChild(t)}t.className='toast'+(err?' err':'');t.textContent=m;clearTimeout(tt);tt=setTimeout(()=>t.remove(),err?4000:2200)}
+function answered(){return Object.values(S.answers).reduce((a,v)=>a+v.filter(x=>x!=null).length,0)}
+function done(){return SECTIONS.every(s=>S.answers[s.k].length===s.n&&S.answers[s.k].every(x=>x!=null))}
+
+/* ---------- scoring ---------- */
+function pct(v,lo,hi){return Math.round((v-lo)/(hi-lo)*100)}
+function scoreBF(){const sums=[0,0,0,0,0];BF_ITEMS.forEach((it,i)=>{const a=S.answers.bf[i];sums[it.f]+=it.k>0?a:6-a});return sums.map(s=>pct(s,10,50))}
+function scoreIP(){const s=[0,0,0,0,0,0];IP_ITEMS.forEach((it,i)=>{s[it.a]+=S.answers.ip[i]-1});return s}  // 0..40 each
+function hollandCode(ip){return ip.map((v,i)=>[v,i]).sort((a,b)=>b[0]-a[0]||a[1]-b[1]).slice(0,3).map(x=>AREAS[x[1]][0]).join('')}
+function scoreMB(){const d={EI:0,SN:0,TF:0,JP:0};MB_ITEMS.forEach((it,i)=>{d[it.d]+=S.answers.mb[i]-3});
+  const out={};let type='';for(const k in d){const p=pct(d[k],-10,10);out[k]=p;type+=p>50?k[1]:k[0]}return{type,p:out}}  // p = % toward the second letter
+function scoreDI(){const s=[0,0,0,0];DI_ITEMS.forEach((it,i)=>{s[it.s]+=S.answers.di[i]});const p=s.map(v=>pct(v,5,25));
+  const o=p.map((v,i)=>[v,i]).sort((a,b)=>b[0]-a[0]);let code=DI_STYLES[o[0][1]][0];if(o[1][0]>=o[0][0]-15&&o[1][0]>=50)code+=DI_STYLES[o[1][1]][0].toLowerCase();return{p,code}}
+function scoreEN(){const s=Array(10).fill(0);EN_ITEMS.forEach((it,i)=>{s[it.t]+=S.answers.en[i]});const p=s.map((v,i)=>i?pct(v,3,15):0);
+  let t=1;for(let i=2;i<=9;i++)if(p[i]>p[t])t=i;const l=t===1?9:t-1,r=t===9?1:t+1;const w=p[l]>p[r]?l:r;return{type:t,wing:w,p}}
+function results(){if(!done())return null;const bf=scoreBF(),ip=scoreIP(),mb=scoreMB(),di=scoreDI(),en=scoreEN();return{bf,ip,holland:hollandCode(ip),mb,di,en}}
+function corr(a,b){const n=a.length,ma=a.reduce((x,y)=>x+y)/n,mb=b.reduce((x,y)=>x+y)/n;let num=0,da=0,db=0;for(let i=0;i<n;i++){num+=(a[i]-ma)*(b[i]-mb);da+=(a[i]-ma)**2;db+=(b[i]-mb)**2}return da&&db?num/Math.sqrt(da*db):0}
+function matches(ip){return JOBS.map(j=>({j,m:Math.round((corr(ip,j.i)+1)*50)})).sort((a,b)=>b.m-a.m)}
+const ZONES=['Any','Little or no preparation','Some preparation','Medium preparation','Considerable preparation','Extensive preparation'];
+const ZONE_SHORT=['','No formal training','Short training or certificate','Diploma or a few years',"Bachelor's degree or equivalent",'Advanced degree or long experience'];
+
+/* ---------- fallback copy (used until the AI writes the profile) ---------- */
+const MB_LINE={E:'you get energy from people',I:'you get energy from time alone',S:'you trust what can be seen and checked',N:'you trust patterns and what could be',T:'you decide by logic first',F:'you decide by what it does to people',J:'you like things settled',P:'you like things open'};
+const AREA_LINE={Realistic:'hands-on work with tools, machines, plants or the outdoors',Investigative:'working out how things work and solving hard problems',Artistic:'making things, from writing to design to performance',Social:'teaching, helping and working closely with people',Enterprising:'leading, selling, persuading and building ventures',Conventional:'structure, records, systems and getting the detail right'};
+const DI_LINE={D:'direct, fast and results-first',I:'persuasive, upbeat and people-first',S:'patient, steady and loyal',C:'careful, exact and rule-respecting'};
+const EN_LINE=['','You want to get things right and are hard on yourself when you do not.','You read what people need and feel best when you are needed.','You measure yourself by what you achieve and adapt to the room.','You feel things deeply and are drawn to what is missing.','You need to understand before you act and guard your energy.','You plan for what could go wrong and look for what you can trust.','You chase what is next and hate being boxed in.','You protect your own and say things straight.','You keep the peace and can see every side.'];
+
+/* ---------- AI ---------- */
+const MODEL='claude-sonnet-5';
+async function claude(body){
+  if(!S.key)throw new Error('No API key. Add one under More.');
+  const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'content-type':'application/json','x-api-key':S.key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify(Object.assign({model:MODEL,max_tokens:1500},body))});
+  const j=await r.json();if(j.error)throw new Error(j.error.message||'The model refused');
+  return (j.content||[]).filter(c=>c.type==='text').map(c=>c.text).join('');}
+function factsText(R){const top=matches(R.ip).slice(0,12).map(x=>x.j.t+' ('+x.m+'%)').join(', ');
+  return 'Name: '+(S.name||'the user')+'\nBig Five (percent, IPIP-50): '+BF_FACTORS.map((f,i)=>f+' '+R.bf[i]).join(', ')+
+  '\nType: '+R.mb.type+' ('+MB_NAMES[R.mb.type]+'); leaning toward second letter: E/I '+R.mb.p.EI+'% toward I, S/N '+R.mb.p.SN+'% toward N, T/F '+R.mb.p.TF+'% toward F, J/P '+R.mb.p.JP+'% toward P'+
+  '\nDISC: '+R.di.code+'; '+DI_STYLES.map((s,i)=>s+' '+R.di.p[i]).join(', ')+
+  '\nHolland code (O*NET Interest Profiler, 0-40 each): '+R.holland+'; '+AREAS.map((a,i)=>a+' '+R.ip[i]).join(', ')+
+  '\nEnneagram: '+R.en.type+'w'+R.en.wing+' ('+EN_NAMES[R.en.type]+'); scores 1-9: '+R.en.p.slice(1).join(', ')+
+  '\nTop O*NET career matches by interest profile: '+top}
+const WRITE_SYS='You write personality profiles for a career app. Plain, direct English. Address the reader as "you". Say the actual numbers in the sentence when you make a claim about a trait. No hype, no flattery, no em dashes, no bullet points. These are questionnaire results, not diagnoses: say what the pattern suggests and what it would mean at work. Return ONLY a JSON object with string fields: headline (one sentence under 25 words in the style "A hyper-conscientious ENTP visionary with an intense investigative drive"), summary (3 to 4 sentences, "This is you"), bigfive, type, disc, holland, enneagram (each 3 to 4 sentences on that framework and what it means for work), careers (3 sentences on what the top matches have in common and which direction fits best, naming two or three of them).';
+async function writeProfile(){const R=results();if(!R||S.busy)return;S.busy=true;render();
+  try{const txt=await claude({system:WRITE_SYS,messages:[{role:'user',content:factsText(R)}]});
+    const m=txt.match(/\{[\s\S]*\}/);if(!m)throw new Error('The model did not return a profile');const o=JSON.parse(m[0]);
+    const need=['headline','summary','bigfive','type','disc','holland','enneagram','careers'];need.forEach(k=>{if(typeof o[k]!=='string')throw new Error('Profile missing '+k)});
+    S.ai=o;S.aiModel=MODEL;save();toast('Profile written')}
+  catch(e){toast(e.message,1)}
+  S.busy=false;render()}
+function mentorSys(){const R=results();return 'You are a career mentor inside a personal app. The user has completed five questionnaires; their results and best-matching occupations are below. Use them, cite the numbers when relevant, and be honest when the data cannot answer something. Plain English, short paragraphs, no bullet lists unless asked, no em dashes, no hype. You can help with career direction, business ideas, interview preparation, resume drafting, salary negotiation and weekly plans. Ask one question at a time when you need more. Never claim to have taken an action.\n\n'+factsText(R)+(S.ai?'\n\nProfile summary already written: '+S.ai.summary:'')}
+async function send(text){if(!text.trim()||S.busy)return;S.chat.push({r:'user',c:text.trim()});lset(KC,S.chat);S.busy=true;render();
+  try{const msgs=S.chat.slice(-30).map(m=>({role:m.r,content:m.c}));const out=await claude({system:mentorSys(),messages:msgs,max_tokens:1200});S.chat.push({r:'assistant',c:out})}
+  catch(e){S.chat.push({r:'assistant',c:e.message,err:1})}
+  lset(KC,S.chat);S.busy=false;render();window.scrollTo(0,document.body.scrollHeight)}
+
+/* ---------- views ---------- */
+const ICON={home:'<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>',work:'<svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2M3 12h18"/></svg>',chat:'<svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 01-11.6 7.1L4 21l1.9-5.4A8 8 0 1121 12z"/></svg>',more:'<svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>'};
+function tabs(){const t=[['home','Profile'],['careers','Careers'],['chat','Mentor'],['more','More']];return '<nav class="tabs">'+t.map(x=>'<button class="'+(S.view===x[0]?'on':'')+'" data-a="go" data-v="'+x[0]+'">'+ICON[x[0]==='careers'?'work':x[0]]+x[1]+'</button>').join('')+'</nav>'}
+function initials(){return (S.name||'?').split(/\s+/).map(w=>w[0]).join('').slice(0,2).toUpperCase()}
+function traitBar(label,v,left,right){return '<div class="trait"><div class="row"><span>'+esc(label)+'</span><span class="mute">'+v+'%</span></div><div class="bar"><i style="width:'+v+'%"></i></div>'+(left?'<div class="ends"><span>'+esc(left)+'</span><span>'+esc(right)+'</span></div>':'')+'</div>'}
+function viewHome(){const R=results();
+  if(!R){const n=answered();return '<h1>Compass</h1><p class="mute">Five short questionnaires. Then a profile of how you work, a ranked list of careers that fit, and a mentor who knows your results.</p>'+
+    '<div class="card"><h3>'+(n?'Pick up where you left off':'Start the questionnaires')+'</h3><p class="mute small">'+TOTAL_Q+' questions, about 20 minutes. Progress saves after every answer.</p>'+(n?'<div class="bar"><i style="width:'+Math.round(n/TOTAL_Q*100)+'%"></i></div>':'')+'<button class="btn" data-a="quiz">'+(n?'Continue, '+n+' of '+TOTAL_Q+' answered':'Begin')+'</button></div>'+
+    '<p class="faint small">Interests use the O*NET Interest Profiler and personality uses the public-domain IPIP Big Five markers. Type, work style and motivation are this app\'s own short scales, so treat them as a sketch, not a verdict.</p>'}
+  const A=S.ai;const chips='<div class="chips"><span class="chip"><b>MBTI</b>'+R.mb.type+'</span><span class="chip"><b>DISC</b>'+R.di.code+'</span><span class="chip"><b>RIASEC</b>'+R.holland+'</span><span class="chip"><b>Enneagram</b>'+R.en.type+'w'+R.en.wing+'</span></div>';
+  let h='<div class="hero"><div class="av">'+esc(initials())+'</div><h1>'+esc(S.name||'You')+'</h1><p class="mute">'+esc(A?A.headline:(MB_NAMES[R.mb.type]+', '+DI_LINE[R.di.code[0]]+', drawn to '+AREA_LINE[AREAS.find(a=>a[0]===R.holland[0])]+'.'))+'</p>'+chips+'</div>';
+  if(!A)h+='<div class="card"><h3>Write the full profile</h3><p class="mute small">'+(S.key?'Claude turns these scores into a written profile: a summary and a section on each framework.':'Add your Anthropic API key under More, then Claude can write the full profile. The scores below are complete without it.')+'</p>'+(S.key?'<button class="btn" data-a="write" '+(S.busy?'disabled':'')+'>'+(S.busy?'<span class="spin"></span>Writing':'Write my profile')+'</button>':'<button class="btn sec" data-a="go" data-v="more">Open More</button>')+'</div>';
+  h+='<h2>Personality test results</h2>';
+  h+=sec('Summary','This is you',A?A.summary:'The scores below are the measured results. The written profile is one tap away once an API key is in.');
+  h+=sec('MBTI',R.mb.type+' · '+MB_NAMES[R.mb.type],A?A.type:'As an '+R.mb.type+', '+R.mb.type.split('').map(l=>MB_LINE[l]).join(', ')+'.',
+    traitBar('Introversion',R.mb.p.EI,'Extravert','Introvert')+traitBar('Intuition',R.mb.p.SN,'Sensing','Intuition')+traitBar('Feeling',R.mb.p.TF,'Thinking','Feeling')+traitBar('Perceiving',R.mb.p.JP,'Judging','Perceiving'));
+  h+=sec('DISC',R.di.code+' · '+R.di.code.split('').map(c=>DI_STYLES.find(s=>s[0]===c.toUpperCase())).join(' and '),A?A.disc:'Your work style reads as '+DI_LINE[R.di.code[0]]+(R.di.code[1]?', with a second strand that is '+DI_LINE[R.di.code[1].toUpperCase()]:'')+'.',
+    DI_STYLES.map((s,i)=>traitBar(s,R.di.p[i])).join(''));
+  h+=sec('Holland code',R.holland+' · '+R.holland.split('').map(c=>AREAS.find(a=>a[0]===c)).join(', '),A?A.holland:'Your interests point at '+R.holland.split('').map(c=>AREA_LINE[AREAS.find(a=>a[0]===c)]).join('; ')+'.',
+    AREAS.map((a,i)=>traitBar(a,Math.round(R.ip[i]/40*100))).join(''));
+  h+=sec('Enneagram',R.en.type+'w'+R.en.wing+' · '+EN_NAMES[R.en.type],A?A.enneagram:EN_LINE[R.en.type]+' Your wing, '+R.en.wing+', colours it.',
+    [1,2,3,4,5,6,7,8,9].map(t=>traitBar(t+' '+EN_NAMES[t].replace('The ',''),R.en.p[t])).join(''));
+  h+=sec('Big Five',BF_FACTORS.map((f,i)=>f.replace('Emotional stability','Stability')+' '+R.bf[i]).join(' · '),A?A.bigfive:'Percent of the possible score on each of the five, from 50 public-domain items.',
+    BF_FACTORS.map((f,i)=>traitBar(f,R.bf[i])).join(''));
+  h+='<div class="card"><h3>Careers</h3><p class="mute">'+esc(A?A.careers:'Ranked against 900 occupations by how closely their interest profile matches yours.')+'</p><button class="btn sec" data-a="go" data-v="careers">See the matches</button></div>';
+  if(A)h+='<p class="faint small">Written by '+esc(S.aiModel||MODEL)+' from your scores. Scores are the measurement; the words are an interpretation.</p>';
+  return h}
+function sec(k,title,body,bars){return '<div class="card sec"><div class="micro">'+esc(k)+'</div><h3>'+esc(title)+'</h3><p>'+esc(body)+'</p>'+(bars||'')+'</div>'}
+function viewCareers(){const R=results();if(!R)return '<h1>Careers</h1><p class="mute">Finish the questionnaires first.</p><button class="btn" data-a="quiz">Go to the questions</button>';
+  let list=matches(R.ip);if(S.zone)list=list.filter(x=>x.j.z===S.zone);list=list.slice(0,40);
+  let h='<h1>Careers</h1><p class="mute small">Your interest profile, '+R.holland+', against every O*NET occupation. The percentage is how closely the shape of the job\'s interests matches yours, not how good you would be at it.</p>';
+  h+='<div class="seg">'+ZONES.map((z,i)=>'<button class="'+(S.zone===i?'on':'')+'" data-a="zone" data-v="'+i+'">'+esc(i?ZONE_SHORT[i]:'All levels')+'</button>').join('')+'</div>';
+  h+='<div class="card">'+list.map(x=>{const j=x.j,open=S.jobOpen===j.c;return '<div class="job" data-a="job" data-v="'+j.c+'"><div class="row"><h3>'+esc(j.t)+'</h3><span class="pct">'+x.m+'%</span></div><div class="zone">'+esc(ZONE_SHORT[j.z])+'</div>'+(open?'<p class="small mute" style="margin-top:8px">'+esc(j.d)+'</p><div class="chips" style="margin-top:4px">'+AREAS.map((a,i)=>'<span class="chip">'+a[0]+' '+j.i[i].toFixed(1)+'</span>').join('')+'</div><button class="btn ghost" data-a="ask" data-v="'+esc('What would a week look like as a '+j.t+', and does it fit me?')+'">Ask the mentor about this</button>':'')+'</div>'}).join('')+'</div>';
+  h+='<p class="faint small">Source: O*NET 31.0 database, U.S. Department of Labor, CC BY 4.0. Interest scores per occupation are O*NET\'s, on a 1 to 7 scale.</p>';return h}
+function viewChat(){const R=results();let h='<h1>Mentor</h1>';
+  if(!R)return h+'<p class="mute">Finish the questionnaires first, so the mentor has something to go on.</p>';
+  if(!S.key)return h+'<p class="mute">Add your Anthropic API key under More to talk to the mentor.</p>';
+  const starts=['What should I do with my life?','Which of my top matches fits a business I could start?','Prep me for an interview','Draft my resume summary','How do I negotiate salary?','What do my results say I should avoid?'];
+  h+=S.chat.length?'':'<p class="mute small">Knows your five results and your top matches. Try one of these or ask anything.</p>';
+  h+='<div class="tags">'+starts.map(s=>'<button data-a="ask" data-v="'+esc(s)+'">'+esc(s)+'</button>').join('')+'</div>';
+  h+='<div class="msgs">'+S.chat.map(m=>'<div class="m '+(m.r==='user'?'u':'a')+(m.err?' err':'')+'">'+esc(m.c)+'</div>').join('')+(S.busy?'<div class="m a"><span class="spin"></span>Thinking</div>':'')+'</div><div style="height:70px"></div>';
+  h+='<div class="compose"><textarea id="in" placeholder="Ask the mentor" rows="1"></textarea><button data-a="send" '+(S.busy?'disabled':'')+'>↑</button></div>';return h}
+function viewMore(){return '<h1>More</h1><div class="card"><label>Your name</label><input type="text" id="name" value="'+esc(S.name)+'" placeholder="Shown on the profile"><label>Anthropic API key</label><input type="password" id="key" value="'+esc(S.key)+'" placeholder="sk-ant-…"><p class="faint small">Stays on this phone only. Used for the written profile and the mentor, on '+MODEL+'. Each profile write is about two cents; a chat reply about one.</p><button class="btn sec" data-a="saveMore">Save</button></div>'+
+  '<div class="card"><h3>Your data</h3><p class="mute small">'+answered()+' of '+TOTAL_Q+' answers, '+S.chat.length+' chat messages, '+(S.ai?'a written profile':'no written profile')+'. Everything lives in this browser. Export before deleting the Home Screen icon.</p><button class="btn sec" data-a="export">Export a backup</button><button class="btn sec" data-a="import">Restore a backup</button><input type="file" id="file" accept=".json" style="display:none"></div>'+
+  '<div class="card"><h3>Start over</h3><p class="mute small">Clears every answer and the written profile. The chat stays.</p><button class="btn sec" data-a="reset" style="color:var(--red)">Clear my answers</button>'+(S.chat.length?'<button class="btn sec" data-a="clearChat">Clear the chat</button>':'')+'</div>'+
+  '<p class="faint small">Interests: O*NET Interest Profiler Short Form and O*NET 31.0 database, U.S. Department of Labor, CC BY 4.0. Personality: IPIP Big-Five Factor Markers, public domain. Type, work style and motivation scales were written for this app and are not validated instruments. Nothing here is medical or psychological advice.</p>'}
+function viewQuiz(){const s=SECTIONS[S.sec],i=S.qi,g=SECTIONS.slice(0,S.sec).reduce((a,x)=>a+x.n,0)+i;
+  let h='<div class="q"><div class="top"><button class="x" data-a="quit">Close</button><div class="bar"><i style="width:'+Math.round(g/TOTAL_Q*100)+'%"></i></div><span class="small mute">'+(g+1)+'/'+TOTAL_Q+'</span></div>';
+  if(i===0&&S.answers[s.k][0]==null&&!S.introSeen){return h+'<div class="micro">Part '+(S.sec+1)+' of 5</div><h1>'+esc(s.title)+'</h1><p class="mute">'+esc(s.lead)+'</p><div style="flex:1"></div><button class="btn" data-a="intro">Start</button></div>'}
+  const cur=S.answers[s.k][i];
+  h+='<div class="micro">'+esc(s.title)+' · '+(i+1)+' of '+s.n+'</div>';
+  if(s.k==='ip'){const it=IP_ITEMS[i];h+='<div class="lead">Would you like to…</div><div class="ask">'+esc(it.q)+'</div>'}
+  else if(s.k==='mb'){const it=MB_ITEMS[i];h+='<div class="ask">'+esc(it.q)+'…</div><div class="bip"><div>'+esc(it.a)+'</div><div>'+esc(it.b)+'</div></div>'}
+  else{const it=(s.k==='bf'?BF_ITEMS:s.k==='di'?DI_ITEMS:EN_ITEMS)[i];h+='<div class="lead">'+(s.k==='bf'?'I…':'')+'</div><div class="ask">'+esc(it.q)+'</div>'}
+  if(s.k==='mb'){h+='<div class="scale">'+[1,2,3,4,5].map(v=>'<button class="'+(cur===v?'on':'')+'" data-a="ans" data-v="'+v+'">'+(v===3?'=':'')+'</button>').join('')+'</div><div class="ends"><span>Left, strongly</span><span>Right, strongly</span></div>'}
+  else h+=s.scale.map((l,k)=>'<button class="opt sm '+(cur===k+1?'on':'')+'" data-a="ans" data-v="'+(k+1)+'">'+esc(l)+'</button>').join('');
+  h+='<div class="row" style="margin-top:8px"><button class="x" data-a="back" '+(g===0?'disabled':'')+'>Back</button></div></div>';return h}
+function render(){const app=document.getElementById('app');const full=S.view==='quiz';app.className=full?'full':'';
+  app.innerHTML=(S.view==='quiz'?viewQuiz():S.view==='careers'?viewCareers():S.view==='chat'?viewChat():S.view==='more'?viewMore():viewHome())+(full?'':tabs());
+  if(S.view==='chat'&&!S.busy){const t=document.getElementById('in');if(t&&S.chat.length)window.scrollTo(0,document.body.scrollHeight)}}
+
+/* ---------- actions ---------- */
+const A={
+  go(v){S.view=v;S.jobOpen=null;save();window.scrollTo(0,0)},
+  quiz(){S.view='quiz';S.sec=0;S.qi=0;for(let k=0;k<SECTIONS.length;k++){const a=S.answers[SECTIONS[k].k],n=SECTIONS[k].n;let i=0;while(i<n&&a[i]!=null)i++;if(i<n){S.sec=k;S.qi=i;break}}S.introSeen=false;save()},
+  intro(){S.introSeen=true},
+  quit(){S.view='home';save()},
+  ans(v){const s=SECTIONS[S.sec];S.answers[s.k][S.qi]=+v;
+    if(S.qi+1<s.n)S.qi++;else if(S.sec+1<SECTIONS.length){S.sec++;S.qi=0;S.introSeen=false}else{S.view='home';S.ai=null;toast('All done')}
+    save()},
+  back(){if(S.qi>0)S.qi--;else if(S.sec>0){S.sec--;S.qi=SECTIONS[S.sec].n-1;S.introSeen=true}save()},
+  write(){writeProfile()},
+  zone(v){S.zone=+v},
+  job(v){S.jobOpen=S.jobOpen===v?null:v},
+  ask(v){S.view='chat';send(v)},
+  send(){const t=document.getElementById('in');if(t){const v=t.value;t.value='';send(v)}},
+  saveMore(){S.name=document.getElementById('name').value.trim();S.key=document.getElementById('key').value.trim();lset(KK,S.key);save();toast('Saved')},
+  export(){const blob=new Blob([JSON.stringify({compass:1,name:S.name,answers:S.answers,ai:S.ai,aiModel:S.aiModel,chat:S.chat})],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='compass-backup.json';a.click()},
+  import(){const f=document.getElementById('file');f.onchange=()=>{const r=new FileReader();r.onload=()=>{try{const o=JSON.parse(r.result);if(!o.compass||!o.answers)throw 0;if(!confirm('Replace what is on this phone with the backup?'))return;S.name=o.name||'';S.answers=o.answers;S.ai=o.ai||null;S.aiModel=o.aiModel||null;S.chat=o.chat||[];lset(KC,S.chat);save();toast('Restored');render()}catch(e){toast('That file is not a Compass backup',1)}};r.readAsText(f.files[0])};f.click()},
+  reset(){if(!confirm('Clear every answer and the written profile? Export first if you want to keep them.'))return;S.answers={ip:[],bf:[],mb:[],di:[],en:[]};S.ai=null;S.sec=0;S.qi=0;save();toast('Cleared')},
+  clearChat(){if(!confirm('Clear the chat?'))return;S.chat=[];lset(KC,S.chat)}
+};
+document.addEventListener('click',e=>{const t=e.target.closest('[data-a]');if(!t||t.disabled)return;const a=t.dataset.a;if(!A[a])return;
+  A[a](t.dataset.v);render()});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&e.target.id==='in'){e.preventDefault();A.send();render()}});
+if(S.view==='quiz')S.introSeen=true;
+render();
+</script>
+</body>
+</html>
